@@ -51,41 +51,41 @@ export function fetchQuizById(quizId) {
 
 export function quizAnswerClick(answerId) {
     return (dispatch, getState) => {
-      const state = getState().currentQuiz;
-  
-      // prevent event handles twice (on each click)
-      let currentState = state.answerState;
-      if (currentState) {
-        const key = Object.keys(currentState)[0];
-        if (currentState[key] === "success") return;
-      }
-  
-      // initialize variables
-      let activeQuestionNumber = state.activeQuestionNumber;
-      let currentQuiz = state.quiz[activeQuestionNumber];
-      let isFinalQuestion = activeQuestionNumber + 1 === state.quiz.length;
-  
-      // set answer state and first chosen result
-      let answerState = "error";
-      let results = state.results;
-      if (!results[currentQuiz.id]) results[currentQuiz.id] = answerState;
-      dispatch(quizSetState({ [answerId]: answerState }, results));
-  
-      // control colors changing and final state
-      const timeout = window.setTimeout(() => {
-        if (isFinalQuestion) dispatch(finishQuiz());
-        else {
-          let nextQuestionNumber = activeQuestionNumber + 1;
-          dispatch(
-            quizNextQuestion(nextQuestionNumber, state.quiz[nextQuestionNumber])
-          );
+        const state = getState().currentQuiz;
+
+        // prevent event handles twice (on each click)
+        let currentState = state.answerState;
+        if (currentState) {
+            const key = Object.keys(currentState)[0];
+            if (currentState[key] === "success") return;
         }
-  
-        window.clearTimeout(timeout);
-      }, 500);
-    };
-  }
-  
+
+        // initialize variables
+        let activeQuestionNumber = state.activeQuestionNumber;
+        let currentQuiz = state.quiz[activeQuestionNumber];
+        let isRightAnswerChosen = currentQuiz.rightAnswerId === answerId;
+        let isFinalQuestion = activeQuestionNumber + 1 === state.quiz.length;
+
+        // set answer state and first chosen result
+        let answerState = isRightAnswerChosen ? "success" : "error";
+        let results = state.results;
+        if (!results[currentQuiz.id]) results[currentQuiz.id] = answerState;
+        dispatch(quizSetState({[answerId]: answerState}, results));
+
+        // control colors changing and final state
+        const timeout = window.setTimeout(() => {
+            if (isFinalQuestion)
+                dispatch(finishQuiz());
+            else {
+                let nextQuestionNumber = activeQuestionNumber + 1;
+                dispatch(quizNextQuestion(nextQuestionNumber, state.quiz[nextQuestionNumber]));
+            }
+
+            window.clearTimeout(timeout);
+        }, 500);
+    }
+}
+
 
 
 export function fetchStart() {

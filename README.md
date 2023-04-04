@@ -6,8 +6,8 @@ Deployed on Firebase with write rules disabled.
 
 
     Log in:
-     email: test@gmail.com
-    password : test1234
+     email: goreeva@gmail.com
+    password : goreeva
 
 <img src="https://user-images.githubusercontent.com/26218291/133905980-61c098f2-3e55-4726-ba9a-f123fc4373fa.png" alt="Login Feature" width="700">
 
